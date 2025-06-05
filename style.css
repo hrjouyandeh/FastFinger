@@ -1,37 +1,37 @@
 body {
-    font-family: 'Tahoma', sans-serif;
-    background: #1a1a1a;
-    color: #fff;
+    font-family: sans-serif;
     text-align: center;
-    padding-top: 100px;
+    padding: 2rem;
+    direction: rtl;
   }
   
-  .container {
-    max-width: 400px;
-    margin: auto;
-  }
-  
-  #startBtn {
-    padding: 12px 24px;
-    font-size: 18px;
-    margin-top: 20px;
-    background: #00c853;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 8px;
-  }
-  
-  #target {
-    width: 100px;
-    height: 100px;
-    background: red;
-    margin: 40px auto;
-    border-radius: 50%;
-    cursor: pointer;
-  }
-  
-  .hidden {
+  #game, #scoreboard {
     display: none;
+  }
+  
+  input, button {
+    padding: 0.5rem;
+    margin: 0.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  
+  #gameArea {
+    margin: 1rem auto;
+    width: 300px;
+    height: 300px;
+    border: 3px solid #333;
+    position: relative;
+    background-color: #f0f0f0;
+    cursor: crosshair;
+  }
+  
+  #targetShape {
+    width: 50px;
+    height: 50px;
+    background-color: green;
+    border-radius: 50%;
+    position: absolute;
+    cursor: pointer;
   }
   

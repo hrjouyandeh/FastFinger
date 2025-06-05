@@ -7,13 +7,28 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <h1>بازی واکنش سریع ⚡</h1>
-    <p id="message">برای شروع روی دکمه زیر کلیک کن</p>
-    <button id="startBtn">شروع</button>
-    <div id="target" class="hidden"></div>
-    <p id="result"></p>
+  <h1>🎯 بازی واکنش سریع</h1>
+
+  <div id="playerForm">
+    <input type="text" id="playerName" placeholder="نام شما" required />
+    <input type="tel" id="playerPhone" placeholder="شماره تلفن" required />
+    <button onclick="startGame()">شروع بازی</button>
   </div>
+
+  <div id="game">
+    <p>🕹 به شکل داخل کادر سریع کلیک کن وقتی ظاهر شد!</p>
+    <div id="gameArea">
+      <!-- شکل تصادفی اینجا ظاهر میشه -->
+    </div>
+  </div>
+
+  <div id="scoreboard">
+    <h3>🏆 جدول رکوردها</h3>
+    <p id="reactionTimeDisplay"></p>
+    <ol id="topScores"></ol>
+    <button onclick="restart()">بازی دوباره</button>
+  </div>
+
   <script src="script.js"></script>
 </body>
 </html>
