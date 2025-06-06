@@ -92,7 +92,7 @@ function startGame() {
   // هر 0.8 ثانیه شکل جدید
   shapeInterval = setInterval(() => {
     showShape();
-  }, 800);
+  }, 400);
 }
 
 window.onload = startGame;
