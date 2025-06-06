@@ -1,107 +1,98 @@
-let startTime;
-let player = null;
+const timerEl = document.getElementById('timer');
+const scoreEl = document.getElementById('score');
+const hitBox = document.getElementById('hitBox');
+
+let timeLeft = 30;
+let score = 0;
+let gameInterval;
+let shapeInterval;
+
+const shapes = [
+  {shape: '●', points: 1, color: 'green'},
+  {shape: '■', points: 2, color: 'blue'},
+  {shape: '▲', points: 3, color: 'red'}
+];
+
+function showShape() {
+  hitBox.innerHTML = ''; // پاک کردن شکل قبلی
+
+  const shape = shapes[Math.floor(Math.random() * shapes.length)];
+  const div = document.createElement('div');
+  div.textContent = shape.shape;
+  div.style.color = shape.color;
+  div.style.position = 'absolute';
+
+  // جایگاه کاملاً تصادفی داخل hitBox
+  const shapeSize = 100;
+const maxX = hitBox.clientWidth - shapeSize;
+const maxY = hitBox.clientHeight - shapeSize;
+const x = Math.floor(Math.random() * maxX);
+const y = Math.floor(Math.random() * maxY);
+
+div.style.left = `${x}px`;
+div.style.top = `${y}px`;
+div.style.fontSize = shapeSize + 'px';
+  
+  div.style.cursor = 'pointer';
+
+  div.onclick = () => {
+    score += shape.points;
+    scoreEl.textContent = score;
+    // بعد کلیک سریع شکل جدید بیاد (اما چون 0.8 ثانیه خودکار عوض میشه، نیاز نیست اینجا صدا کنیم)
+    // showShape();
+  };
+
+  hitBox.appendChild(div);
+}
+
+function endGame() {
+  clearInterval(gameInterval);
+  clearInterval(shapeInterval); // توقف شکل های تصادفی
+
+  alert(`بازی تمام شد!\nامتیاز شما: ${score}`);
+
+  // ذخیره رکورد
+  const playerName = localStorage.getItem('playerName');
+  const playerPhone = localStorage.getItem('playerPhone');
+
+  let allScores = JSON.parse(localStorage.getItem('allScores') || '[]');
+  allScores.push({name: playerName, phone: playerPhone, score: score});
+  localStorage.setItem('allScores', JSON.stringify(allScores));
+  localStorage.setItem('playerScore', score);
+
+  localStorage.setItem('played', 'yes');
+
+  window.location.href = 'records.html';
+}
 
 function startGame() {
-  const name = document.getElementById('playerName').value.trim();
-  const phone = document.getElementById('playerPhone').value.trim();
-
-  if (!name || !phone) {
-    alert("لطفاً نام و شماره تلفن را وارد کنید.");
+  if(localStorage.getItem('played') === 'yes'){
+    alert('شما قبلاً بازی کرده‌اید.');
+    window.location.href = 'records.html';
     return;
   }
 
-  player = { name, phone, score: 0 };
-  localStorage.setItem("currentPlayer", JSON.stringify(player));
+  timeLeft = 30;
+  score = 0;
+  timerEl.textContent = timeLeft;
+  scoreEl.textContent = score;
 
-  document.getElementById("playerForm").style.display = "none";
-  document.getElementById("game").style.display = "block";
+  showShape();
 
-  spawnShapeAfterDelay();
+  // تایمر شمارش معکوس بازی
+  gameInterval = setInterval(() => {
+    timeLeft--;
+    timerEl.textContent = timeLeft;
+
+    if (timeLeft <= 0) {
+      endGame();
+    }
+  }, 1000);
+
+  // هر 0.8 ثانیه شکل جدید
+  shapeInterval = setInterval(() => {
+    showShape();
+  }, 800);
 }
 
-// تابع برای ظاهر کردن شکل در جای تصادفی بعد از زمان تصادفی
-function spawnShapeAfterDelay() {
-  const delay = Math.floor(Math.random() * 3000) + 1000; // 1 تا 4 ثانیه
-  const gameArea = document.getElementById("gameArea");
-
-  // پاک کردن شکل قبلی اگر بود
-  gameArea.innerHTML = "";
-  const shape = document.createElement("div");
-  shape.id = "targetShape";
-
-  // محاسبه موقعیت تصادفی داخل gameArea
-  const maxX = gameArea.clientWidth - 50; // عرض شکل 50px
-  const maxY = gameArea.clientHeight - 50;
-
-  const posX = Math.floor(Math.random() * maxX);
-  const posY = Math.floor(Math.random() * maxY);
-
-  shape.style.left = posX + "px";
-  shape.style.top = posY + "px";
-
-  // شکل تا قبل از ظاهر شدن غیر فعال است
-  shape.style.visibility = "hidden";
-
-  gameArea.appendChild(shape);
-
-  setTimeout(() => {
-    shape.style.visibility = "visible";
-    startTime = new Date().getTime();
-
-    shape.addEventListener("click", () => {
-      const reactionTime = new Date().getTime() - startTime;
-      endGame(reactionTime);
-    }, { once: true });
-  }, delay);
-}
-
-// تابع فرمت زمان به صورت mm:ss.ms
-function formatTime(ms) {
-  const totalSeconds = ms / 1000;
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = Math.floor(totalSeconds % 60);
-  const milliseconds = ms % 1000;
-
-  return (
-    (minutes < 10 ? "0" : "") + minutes + ":" +
-    (seconds < 10 ? "0" : "") + seconds + "." +
-    Math.floor(milliseconds / 10).toString().padStart(2, "0")
-  );
-}
-
-function endGame(reactionTime) {
-  player = JSON.parse(localStorage.getItem("currentPlayer"));
-  player.score = 1000 - reactionTime;
-  if (player.score < 0) player.score = 0;
-
-  // ذخیره زمان به صورت عدد اصلی در رکورد برای مرتب‌سازی
-  player.timeMs = reactionTime;
-
-  // ذخیره در لیست رکوردها
-  let scores = JSON.parse(localStorage.getItem("scoreboard")) || [];
-  scores.push(player);
-
-  // مرتب‌سازی بر اساس زمان (کمتر بهتر)
-  scores.sort((a, b) => a.timeMs - b.timeMs);
-  scores = scores.slice(0, 5);
-
-  localStorage.setItem("scoreboard", JSON.stringify(scores));
-
-  // نمایش جدول و زمان واکنش
-  const topList = document.getElementById("topScores");
-  topList.innerHTML = "";
-  scores.forEach((p, index) => {
-    topList.innerHTML += `<li>${index + 1}. ${p.name} - زمان واکنش: ${formatTime(p.timeMs)}</li>`;
-  });
-
-  const timeDisplay = document.getElementById("reactionTimeDisplay");
-  timeDisplay.innerText = `زمان واکنش شما: ${formatTime(reactionTime)}`;
-
-  // نمایش بخش رکورد
-  document.getElementById("game").style.display = "none";
-  document.getElementById("scoreboard").style.display = "block";
-}
-
-function restart() {
-  location.reload();
-}
+window.onload = startGame;

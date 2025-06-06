@@ -2,33 +2,45 @@
 <html lang="fa">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>بازی واکنش سریع</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ثبت نام بازی</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>🎯 بازی واکنش سریع</h1>
-
-  <div id="playerForm">
-    <input type="text" id="playerName" placeholder="نام شما" required />
-    <input type="tel" id="playerPhone" placeholder="شماره تلفن" required />
-    <button onclick="startGame()">شروع بازی</button>
+  <div class="container">
+    <h2>ثبت نام برای شروع بازی</h2>
+    <form id="registerForm">
+      <label for="name">نام شما:</label>
+      <input type="text" id="name" required />
+      <label for="phone">شماره تماس:</label>
+      <input type="tel" id="phone" pattern="[0-9]{10,15}" required />
+      <button type="submit">شروع بازی</button>
+    </form>
   </div>
 
-  <div id="game">
-    <p>🕹 به شکل داخل کادر سریع کلیک کن وقتی ظاهر شد!</p>
-    <div id="gameArea">
-      <!-- شکل تصادفی اینجا ظاهر میشه -->
-    </div>
-  </div>
+  <script>
+    const form = document.getElementById('registerForm');
 
-  <div id="scoreboard">
-    <h3>🏆 جدول رکوردها</h3>
-    <p id="reactionTimeDisplay"></p>
-    <ol id="topScores"></ol>
-    <button onclick="restart()">بازی دوباره</button>
-  </div>
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
 
-  <script src="script.js"></script>
+      if (!name || !phone) {
+        alert('لطفا همه فیلدها را پر کنید');
+        return;
+      }
+
+      // ذخیره داده در localStorage
+      localStorage.setItem('playerName', name);
+      localStorage.setItem('playerPhone', phone);
+
+      // یک پرچم برای اجازه بازی اول
+      localStorage.setItem('played', 'no');
+
+      // هدایت به صفحه بازی
+      window.location.href = 'game.html';
+    });
+  </script>
 </body>
 </html>

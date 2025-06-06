@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <title>داشبورد من</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="dashboard-container">
+    <h1>🎮 داشبورد شما</h1>
+
+    <div class="player-info">
+      <p><strong>نام:</strong> <span id="playerName"></span></p>
+      <p><strong>شماره:</strong> <span id="playerPhone"></span></p>
+      <p><strong>رکورد شما:</strong> <span id="playerScore"></span></p>
+      <p><strong>گیف پول:</strong> <span id="playerGift"></span> 🪙</p>
+    </div>
+
+    <hr>
+
+    <h2>🏆 جدول بهترین رکوردها</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ردیف</th>
+          <th>نام</th>
+          <th>شماره</th>
+          <th>امتیاز</th>
+        </tr>
+      </thead>
+      <tbody id="scoreTableBody"></tbody>
+    </table>
+
+    <div class="buttons">
+      <button onclick="restartGame()">🔄 بازی مجدد</button>
+      <button onclick="inviteFriends()">📨 دعوت دوستان</button>
+    </div>
+  </div>
+
+  <script src="records.js"></script>
+</body>
+</html>
