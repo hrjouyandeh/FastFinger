@@ -10,7 +10,8 @@ let shapeInterval;
 const shapes = [
   {shape: '●', points: 1, color: 'green'},
   {shape: '■', points: 2, color: 'blue'},
-  {shape: '▲', points: 3, color: 'red'}
+  {shape: '▲', points: 3, color: 'red'},
+  {shape: 'x', points: -2, color: 'black'}
 ];
 
 function showShape() {
@@ -92,7 +93,7 @@ function startGame() {
   // هر 0.8 ثانیه شکل جدید
   shapeInterval = setInterval(() => {
     showShape();
-  }, 500);
+  }, 600);
 }
 
 window.onload = startGame;
